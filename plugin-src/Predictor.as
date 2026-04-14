@@ -233,6 +233,8 @@ namespace Predictor {
                 return false;
             }
 
+            if (!IsPredictorServerHealthy()) return false;
+
             print("Predictor: requesting Openplanet token for server authentication...");
             auto tokenTask = Auth::GetToken();
             while (!tokenTask.Finished()) yield();
@@ -370,6 +372,38 @@ namespace Predictor {
             string url = serverUrl;
             if (!url.EndsWith("/")) url += "/";
             return url + endpoint;
+        }
+
+        /**
+         * GET /health on the predictor API before Auth::GetToken(), so we do not
+         * hammer Openplanet's auth when our backend is unreachable.
+         *
+         * @returns {bool} True when health responds with 2xx
+         * @private
+         */
+        private bool IsPredictorServerHealthy() {
+            // Build the health URL
+            string healthUrl = BuildServerUrl("health");
+            if (healthUrl.Length == 0) return false;
+
+            // Create the health request
+            Net::HttpRequest@ healthRequest = Net::HttpRequest();
+            healthRequest.Method = Net::HttpMethod::Get;
+            healthRequest.Url = healthUrl;
+            healthRequest.Start();
+
+            // Wait for the health request to finish
+            while (!healthRequest.Finished()) yield();
+
+            // Get the response code
+            int code = healthRequest.ResponseCode();
+
+            // Check if the response code is 2xx
+            bool ok = code >= 200 && code < 300;
+            if (!ok) print("Predictor: server health check failed (HTTP " + code + "), skipping Openplanet token request");
+
+            // Return the result
+            return ok;
         }
 
         /**

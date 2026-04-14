@@ -11,7 +11,6 @@ export { type GetSplitsRequest } from './interfaces/get-splits-request.interface
 export { type PopulatedTMNextSplit } from './interfaces/populated-tmnext-split.interface';
 export { type SaveSplitData } from './interfaces/save-split-data.interface';
 export { type SaveSplitRequest } from './interfaces/save-split-request.interface';
-export { type TimestampedDocument } from './interfaces/timestamped-document.interface';
 export { type TMNextMap } from './interfaces/tmnext-map.interface';
 export { type TMNextPlayer } from './interfaces/tmnext-player.interface';
 export { type TMNextSplit } from './interfaces/tmnext-split.interface';

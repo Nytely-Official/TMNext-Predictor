@@ -1,16 +1,25 @@
-// Internal Imports
-import { SplitModel } from '../database/models/split.model';
-import { findOrCreatePlayer } from './player.service';
-import { findOrCreateMap } from './map.service';
+import { Timestamp } from 'spacetimedb';
+
+import { getSpacetimeConnection } from './spacetime-connection.service';
+import type { SplitDto } from '../spacetime-bindings/types.ts';
 import type { PopulatedTMNextSplit, SaveSplitData } from '../types/types';
 
 /**
- * Save a new split
- * @param accountId The account ID of the player
- * @param displayName The display name of the player
- * @param mapId The ID of the map
- * @param splitData The data for the split
- * @returns The new split
+ * Maps a SpacetimeDB {@link SplitDto} (procedure return shape) into the Fastify route DTO.
+ */
+function splitDtoToPopulated(d: SplitDto): PopulatedTMNextSplit {
+	return {
+		id: d.splitId.toString(),
+		playerId: d.accountId,
+		mapId: d.mapUid,
+		checkpointTimes: d.checkpointTimes,
+		totalTime: d.totalTime,
+		runDate: d.runDate.toDate(),
+	};
+}
+
+/**
+ * Saves a finished run via the `submitSplit` procedure (no SQL on the API side).
  */
 export async function saveSplit(
 	accountId: string,
@@ -18,78 +27,40 @@ export async function saveSplit(
 	mapId: string,
 	splitData: SaveSplitData,
 ): Promise<PopulatedTMNextSplit> {
-	// Get or create player and map
-	const player = await findOrCreatePlayer(accountId, displayName);
-	const map = await findOrCreateMap(mapId);
+	const conn = await getSpacetimeConnection();
 
-	// Create the new split
-	const split = await SplitModel.create({
-		playerId: player._id,
-		mapId: map._id,
+	const runDate =
+		splitData.runDate != null ? Timestamp.fromDate(splitData.runDate) : undefined;
+
+	const dto = await conn.procedures.submitSplit({
+		accountId,
+		displayName,
+		mapUid: mapId,
 		checkpointTimes: splitData.checkpointTimes,
 		totalTime: splitData.totalTime,
-		runDate: splitData.runDate ?? new Date(),
+		runDate,
 	});
 
-	// Return the new split
-	return split as unknown as PopulatedTMNextSplit;
+	return splitDtoToPopulated(dto);
 }
 
-/**
- * Get the splits for a player
- * @param accountId The account ID of the player
- * @param mapId The ID of the map
- * @returns The splits for the player
- */
+/** All splits for the player on the map, sorted by total time (ascending). */
 export async function getPlayerSplits(accountId: string, mapId: string): Promise<Array<PopulatedTMNextSplit>> {
-	// Find the Map
-	const map = await findOrCreateMap(mapId);
-
-	// Find the splits for the player and map
-	const splits = await SplitModel.find({ playerId: accountId, mapId: map._id })
-		.populate('playerId')
-		.populate('mapId')
-		.sort({ totalTime: 1 });
-
-	// Return the splits
-	return splits as unknown as Array<PopulatedTMNextSplit>;
+	const conn = await getSpacetimeConnection();
+	const rows = await conn.procedures.listSplitsForPlayerMap({ accountId, mapUid: mapId });
+	return rows.map(splitDtoToPopulated);
 }
 
-/**
- * Get the best split for a player
- * @param accountId The account ID of the player
- * @param mapId The ID of the map
- * @returns The best split for the player
- */
+/** Personal best for the map, or `null` if none (procedure uses optional return). */
 export async function getPlayerBestSplit(accountId: string, mapId: string): Promise<PopulatedTMNextSplit | null> {
-	// Find the Map
-	const map = await findOrCreateMap(mapId);
-
-	// Find the splits for the player and map
-	const split = await SplitModel.findOne({ playerId: accountId, mapId: map._id })
-		.populate('playerId')
-		.populate('mapId')
-		.sort({ totalTime: 1 });
-
-	// Return the splits
-	return split as unknown as PopulatedTMNextSplit;
+	const conn = await getSpacetimeConnection();
+	const best = await conn.procedures.getPersonalBestForMap({ accountId, mapUid: mapId });
+	return best != null ? splitDtoToPopulated(best) : null;
 }
 
-/**
- * Get the global best split for a map
- * @param mapId The ID of the map
- * @returns The global best split for the map
- */
+/** Global best on the map, or `null` if none. */
 export async function getGlobalBestSplit(mapId: string): Promise<PopulatedTMNextSplit | null> {
-	// Find the Map
-	const map = await findOrCreateMap(mapId);
-
-	// Find the global best split for the map
-	const split = await SplitModel.findOne({ mapId: map._id }).populate('playerId').populate('mapId').sort({ totalTime: 1 });
-
-	// Log the global best split
-	console.log('Global Best Split:', split);
-
-	// Return the global best split
-	return split as unknown as PopulatedTMNextSplit;
+	const conn = await getSpacetimeConnection();
+	const best = await conn.procedures.getGlobalBestForMap({ mapUid: mapId });
+	return best != null ? splitDtoToPopulated(best) : null;
 }

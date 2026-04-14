@@ -10,7 +10,6 @@ import {
 	type AuthenticatedRequest,
 	type GetSplitsRequest,
 	type SaveSplitRequest,
-	type TMNextSplit,
 } from '../types/types';
 
 /**
@@ -81,7 +80,7 @@ async function saveSplitHandler(request: SaveSplitRequest, reply: FastifyReply) 
 
 	// Setup the Response Data
 	const responseData = {
-		id: split._id,
+		id: split.id,
 		mapId,
 		checkpointTimes: split.checkpointTimes,
 		totalTime: split.totalTime,
@@ -148,9 +147,9 @@ async function getSplitsHandler(request: GetSplitsRequest, reply: FastifyReply) 
 
 	// Map the Splits to a proper response format
 	const mappedSplits = splits.map(split => ({
-		id: split._id.toString(),
-		playerId: split.playerId._id.toString(),
-		mapId: split.mapId._id.toString(),
+		id: split.id,
+		playerId: split.playerId,
+		mapId: split.mapId,
 		checkpointTimes: split.checkpointTimes,
 		totalTime: split.totalTime,
 		runDate: split.runDate,

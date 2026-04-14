@@ -1,17 +1,14 @@
-// Internal Imports
-import { type TimestampedDocument } from '../types';
-
 /**
- * Interface for the TMNext Player
+ * Player record fields exposed in API responses (Trackmania account id).
  */
-export interface TMNextPlayer extends TimestampedDocument {
+export interface TMNextPlayer {
 	/**
-	 * The players ID from Openplanet
+	 * The player's account ID from Openplanet / Trackmania.
 	 */
-	accountId: string; // Openplanet account ID
+	accountId: string;
 
 	/**
-	 * The players display name
+	 * The player's current display name.
 	 */
 	displayName: string;
 }

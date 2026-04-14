@@ -3,9 +3,9 @@ import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import cors from '@fastify/cors';
 
 // Internal Imports
-import { database } from './database/database';
 import { registerSplitRoutes } from './routes/splits.route';
 import { registerAuthRoutes } from './routes/auth.route';
+import { disconnectSpacetime, getSpacetimeConnection } from './services/spacetime-connection.service';
 
 // Setup the Environment Variables
 const PORT = process.env.PORT || 3000;
@@ -20,8 +20,8 @@ await fastify.register(cors, {
 	credentials: true,
 });
 
-// Connect to database
-await database.connect();
+// Connect to SpacetimeDB (WebSocket client)
+await getSpacetimeConnection();
 
 // Register routes
 await fastify.register(registerAuthRoutes);
@@ -55,8 +55,8 @@ async function gracefulShutdown(signal: NodeJS.Signals) {
 	// Close the Fastify Instance
 	await fastify.close();
 
-	// Disconnect from the Database
-	await database.disconnect();
+	// Disconnect from SpacetimeDB
+	await disconnectSpacetime();
 
 	// Exit the Process
 	process.exit(0);

@@ -1,23 +1,7 @@
-// External Imports
-import { ObjectId } from 'mongoose';
-
-// Internal Imports
-import { type TimestampedDocument } from '../types';
-
 /**
- * Interface for the TMNext Split
+ * Split row shape used by the HTTP API (SpacetimeDB-backed).
  */
-export interface TMNextSplit extends TimestampedDocument {
-	/**
-	 * The ID of the Player
-	 */
-	playerId: ObjectId;
-
-	/**
-	 * The ID of the Map
-	 */
-	mapId: ObjectId;
-
+export interface TMNextSplit {
 	/**
 	 * The cumulative checkpoint times in milliseconds
 	 */

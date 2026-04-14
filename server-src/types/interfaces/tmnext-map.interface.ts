@@ -1,12 +1,9 @@
-// Internal Imports
-import { type TimestampedDocument } from '../types';
-
 /**
- * Interface for the TMNext Map
+ * Map record fields exposed in API responses.
  */
-export interface TMNextMap extends TimestampedDocument {
+export interface TMNextMap {
 	/**
-	 * The ID of the Map
+	 * The Trackmania map UID.
 	 */
 	mapId: string;
 }

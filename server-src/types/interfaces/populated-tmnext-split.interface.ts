@@ -1,32 +1,21 @@
-// Internal Imports
-import { TMNextMap, TMNextPlayer, TMNextSplit } from '../types';
+import { TMNextSplit } from './tmnext-split.interface';
 
 /**
- * Interface for the TMNext Split
+ * Split with string identifiers for player and map (Openplanet account id and map uid).
  */
-export interface PopulatedTMNextSplit extends Omit<TMNextSplit, 'playerId' | 'mapId'> {
+export interface PopulatedTMNextSplit extends TMNextSplit {
 	/**
-	 * The ID of the Player
+	 * Split row id (SpacetimeDB auto-increment as string)
 	 */
-	playerId: TMNextPlayer;
+	id: string;
 
 	/**
-	 * The ID of the Map
+	 * Trackmania / Openplanet account id
 	 */
-	mapId: TMNextMap;
+	playerId: string;
 
 	/**
-	 * The cumulative checkpoint times in milliseconds
+	 * Map uid
 	 */
-	checkpointTimes: number[];
-
-	/**
-	 * The final finish time in milliseconds
-	 */
-	totalTime: number;
-
-	/**
-	 * The date of the run
-	 */
-	runDate: Date;
+	mapId: string;
 }

@@ -53,8 +53,8 @@ void ServerAuthenticationCoroutine() {
     while (predictorCore is null) yield();
 
     while (!predictorCore.AuthenticateWithServer()) {
-        print("Predictor: server authentication failed, retrying in 5 seconds...");
-        sleep(5000);
+        print("Predictor: server authentication failed, retrying in 60 seconds...");
+        sleep(60000);
         while (predictorCore is null) yield();
     }
 }

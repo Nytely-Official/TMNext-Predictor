@@ -3,11 +3,17 @@
 	"version": "3.0.0",
 	"description": "",
 	"main": "server-src/main.ts",
+	"workspaces": ["spacetime-src"],
+	"engines": {
+		"bun": ">=1.3.0"
+	},
 	"scripts": {
 		"build:plugin": "bun run build-plugin.ts",
 		"build:server": "bun bun.build.js",
 		"dev": "bun run server-src/main.ts",
-		"start": "bun run dist/main.js"
+		"start": "bun run dist/main.js",
+		"generate": "spacetime generate --lang typescript --out-dir server-src/spacetime-bindings --module-path spacetime-src",
+		"publish": "bun run scripts/spacetime-publish-maincloud.ts"
 	},
 	"keywords": [
 		"trackmania",
@@ -17,16 +23,17 @@
 	"author": "JackNytely",
 	"license": "MIT",
 	"dependencies": {
-		"@fastify/cors": "^11.1.0",
-		"fastify": "^5.6.1",
-		"jsonwebtoken": "^9.0.2",
-		"mongoose": "^8.19.2"
+		"@fastify/cors": "^11.2.0",
+		"fastify": "^5.8.4",
+		"jsonwebtoken": "^9.0.3",
+		"spacetimedb": "^2.1.0"
 	},
 	"devDependencies": {
-		"@types/bun": "^1.3.1",
+		"@types/bun": "^1.3.12",
 		"@types/jsonwebtoken": "^9.0.10",
-		"@types/node": "^24.9.1",
-		"rimraf": "^6.0.1",
-		"zip-a-folder": "^3.1.9"
+		"@types/node": "^25.6.0",
+		"rimraf": "^6.1.3",
+		"typescript": "^5.9.3",
+		"zip-a-folder": "^6.1.0"
 	}
 }
