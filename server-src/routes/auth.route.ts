@@ -8,7 +8,7 @@ import { AuthenticationPayload, AuthUserResponse, AuthValidationResponse, type A
 // Get the Environment Variables
 const JWT_SECRET = process.env.JWT_SECRET;
 const OPENPLANET_SECRET = process.env.OPENPLANET_SECRET;
-const OPENPLANET_VALIDATION_URL = process.env.OPENPLANET_VALIDATION_URL || 'https://openplanet.dev/api/auth/validate';
+const OPENPLANET_VALIDATION_URL = process.env.OPENPLANET_VALIDATION_URL || 'https://api.openplanet.dev/auth/validate';
 
 /**
  * Register the Auth Routes

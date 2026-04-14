@@ -262,7 +262,7 @@ namespace Predictor {
             fetchingConfig = true;
             @configRequest = Net::HttpRequest();
             configRequest.Method = Net::HttpMethod::Get;
-            configRequest.Url = "https://openplanet.dev/plugin/predictor/config/config";
+            configRequest.Url = "https://api.openplanet.dev/plugin/predictor/config/config";
             configRequest.Start();
             
             print("Fetching remote config...");

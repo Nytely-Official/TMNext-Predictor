@@ -56,7 +56,7 @@ MONGO_DATABASE=predictor
 
 # Openplanet Authentication
 OPENPLANET_SECRET=your_unique_plugin_secret_here
-OPENPLANET_VALIDATION_URL=https://openplanet.dev/api/auth/validate
+OPENPLANET_VALIDATION_URL=https://api.openplanet.dev/auth/validate
 
 # Server Configuration
 PORT=3000
