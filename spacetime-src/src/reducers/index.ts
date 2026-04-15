@@ -1,14 +1,10 @@
 /**
- * Barrel for **procedure bodies** and DTO helpers consumed by `../index.ts`.
- *
- * SpacetimeDB calls these units “reducers” in docs generically; this project only uses **procedures**
- * for reads/writes that return data to the Node/Bun API.
+ * Barrel for split DTOs, `submit_split` reducer, and read **procedure** bodies for `../index.ts`.
  */
 export { splitDto, toSplitDto, type SplitRow } from './dto';
+export { submit_split } from './submit-split.reducer';
 export {
-	getGlobalBestForMapProcedure,
-	getPersonalBestForMapProcedure,
-	listSplitsForPlayerMapProcedure,
-	submitSplitProcedure,
-	type SubmitSplitProcedureArgs,
+	get_global_best_for_map_procedure,
+	get_personal_best_for_map_procedure,
+	list_splits_for_player_map_procedure,
 } from './procedures';

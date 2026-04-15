@@ -59,6 +59,8 @@ async function saveSplitHandler(request: SaveSplitRequest, reply: FastifyReply) 
 	// Check if the Total Time Is not a number or is not positive
 	if (typeof totalTime !== 'number' || totalTime <= 0) return reply.code(400).send({ error: 'totalTime must be a positive number' });
 
+	console.log('POST /splits/save — persisting split to SpacetimeDB for map:', mapId);
+
 	// Save the split
 	const split = await saveSplit(userId, displayName, mapId, {
 		checkpointTimes,

@@ -9,7 +9,6 @@ import { type Infer as __Infer } from "spacetimedb";
 import * as GetGlobalBestForMapProcedure from "../get_global_best_for_map_procedure";
 import * as GetPersonalBestForMapProcedure from "../get_personal_best_for_map_procedure";
 import * as ListSplitsForPlayerMapProcedure from "../list_splits_for_player_map_procedure";
-import * as SubmitSplitProcedure from "../submit_split_procedure";
 
 export type GetGlobalBestForMapArgs = __Infer<typeof GetGlobalBestForMapProcedure.params>;
 export type GetGlobalBestForMapResult = __Infer<typeof GetGlobalBestForMapProcedure.returnType>;
@@ -17,6 +16,4 @@ export type GetPersonalBestForMapArgs = __Infer<typeof GetPersonalBestForMapProc
 export type GetPersonalBestForMapResult = __Infer<typeof GetPersonalBestForMapProcedure.returnType>;
 export type ListSplitsForPlayerMapArgs = __Infer<typeof ListSplitsForPlayerMapProcedure.params>;
 export type ListSplitsForPlayerMapResult = __Infer<typeof ListSplitsForPlayerMapProcedure.returnType>;
-export type SubmitSplitArgs = __Infer<typeof SubmitSplitProcedure.params>;
-export type SubmitSplitResult = __Infer<typeof SubmitSplitProcedure.returnType>;
 

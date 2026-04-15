@@ -12,7 +12,7 @@
 		"build:server": "bun bun.build.js",
 		"dev": "bun run server-src/main.ts",
 		"start": "bun run dist/main.js",
-		"generate": "spacetime generate --lang typescript --out-dir server-src/spacetime-bindings --module-path spacetime-src",
+		"generate": "spacetime generate -y --lang typescript --out-dir server-src/spacetime-bindings --module-path spacetime-src",
 		"publish": "bun run scripts/spacetime-publish-maincloud.ts"
 	},
 	"keywords": [

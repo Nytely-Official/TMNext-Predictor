@@ -10,11 +10,7 @@ import {
   type Infer as __Infer,
 } from "spacetimedb";
 
-import {
-  SplitDto,
-} from "./types";
-
-export const params = {
+export default {
   accountId: __t.string(),
   displayName: __t.string(),
   mapUid: __t.string(),
@@ -22,4 +18,3 @@ export const params = {
   totalTime: __t.u32(),
   runDate: __t.option(__t.timestamp()),
 };
-export const returnType = SplitDto

@@ -19,7 +19,8 @@ function splitDtoToPopulated(d: SplitDto): PopulatedTMNextSplit {
 }
 
 /**
- * Saves a finished run via the `submitSplit` procedure (no SQL on the API side).
+ * Saves via `submit_split` reducer, then loads the new row via `list_splits_for_player_map` procedure
+ * (SpacetimeDB v2: writes = reducers; reads that return data = procedures with `withTx`, not SQL).
  */
 export async function saveSplit(
 	accountId: string,
@@ -32,7 +33,7 @@ export async function saveSplit(
 	const runDate =
 		splitData.runDate != null ? Timestamp.fromDate(splitData.runDate) : undefined;
 
-	const dto = await conn.procedures.submitSplit({
+	await conn.reducers.submitSplit({
 		accountId,
 		displayName,
 		mapUid: mapId,
@@ -41,7 +42,21 @@ export async function saveSplit(
 		runDate,
 	});
 
-	return splitDtoToPopulated(dto);
+	// Get the splits for the player on the map
+	const rows = await conn.procedures.listSplitsForPlayerMap({ accountId, mapUid: mapId });
+	
+	// Check if the splits are empty
+	if (rows.length === 0) throw new Error('submit_split completed but no splits found for player/map');
+
+
+	// Get the newest split
+	let newest = rows[0]!;
+
+	// Loop through the splits and find the newest one
+	for (const row of rows) if (row.splitId > newest.splitId) newest = row;
+	
+	// Return the newest split
+	return splitDtoToPopulated(newest);
 }
 
 /** All splits for the player on the map, sorted by total time (ascending). */

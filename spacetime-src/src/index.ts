@@ -1,60 +1,48 @@
 /**
- * TMNext Predictor — SpacetimeDB **module entry**.
+ * TMNext Predictor — SpacetimeDB v2 TypeScript module.
  *
- * - **Default export**: schema instance (required by the SpacetimeDB host).
- * - **Named exports**: procedures the Fastify API calls via generated client bindings.
+ * **SpacetimeDB distinguishes reducers vs procedures** (see official docs: Reducers, Procedures):
  *
- * Table definitions live under `./tables/`. Procedure implementations live under `./reducers/`.
- * Run `bun run generate:spacetime` from the repo root after changing tables or procedure signatures.
+ * - **`db.reducer`** — Only way to **mutate** tables; the function returns **`void`**. Use for writes (`submit_split`).
+ * - **`db.procedure` + `ctx.withTx`** — The supported way to run **read transactions that return values** to the
+ *   caller. This is **not SQL**: each export is one named remote function on the same `/call` path as reducers.
+ *
+ * You cannot implement “get split and return DTO” as a reducer in TypeScript (reducers are `void`). Reads that
+ * must return data are therefore **procedures**, which is how SpacetimeDB v2 is designed.
+ *
+ * Run `bun run generate` from the repo root after changing signatures.
  */
-import { schema, t, CaseConversionPolicy } from 'spacetimedb/server';
+import { t } from 'spacetimedb/server';
 
-import { predictorTables } from './schema-types';
+import db from './schema';
 import {
-	getGlobalBestForMapProcedure,
-	getPersonalBestForMapProcedure,
-	listSplitsForPlayerMapProcedure,
+	get_global_best_for_map_procedure,
+	get_personal_best_for_map_procedure,
+	list_splits_for_player_map_procedure,
 	splitDto,
-	submitSplitProcedure,
 } from './reducers';
 
-const spacetimedb = schema(predictorTables, {
-	CASE_CONVERSION_POLICY: CaseConversionPolicy.None,
-});
+export { submit_split } from './reducers/submit-split.reducer';
 
-export default spacetimedb;
+export default db;
 
-/** Inserts a finished run; returns the new row as {@link splitDto}. */
-export const submitSplit = spacetimedb.procedure(
-	{
-		accountId: t.string(),
-		displayName: t.string(),
-		mapUid: t.string(),
-		checkpointTimes: t.array(t.u32()),
-		totalTime: t.u32(),
-		runDate: t.option(t.timestamp()),
-	},
-	splitDto,
-	submitSplitProcedure,
-);
-
-/** All splits for a player on a map, ordered by finish time (ascending). */
-export const listSplitsForPlayerMap = spacetimedb.procedure(
+/** All splits for a player on a map (sorted by total time ascending). */
+export const list_splits_for_player_map = db.procedure(
 	{ accountId: t.string(), mapUid: t.string() },
 	t.array(splitDto),
-	listSplitsForPlayerMapProcedure,
+	list_splits_for_player_map_procedure,
 );
 
 /** Fastest split for that player on that map, or `undefined` if none. */
-export const getPersonalBestForMap = spacetimedb.procedure(
+export const get_personal_best_for_map = db.procedure(
 	{ accountId: t.string(), mapUid: t.string() },
 	t.option(splitDto),
-	getPersonalBestForMapProcedure,
+	get_personal_best_for_map_procedure,
 );
 
-/** Fastest split on the map across all players, or `undefined` if none. */
-export const getGlobalBestForMap = spacetimedb.procedure(
+/** Fastest split on the map across players, or `undefined` if none. */
+export const get_global_best_for_map = db.procedure(
 	{ mapUid: t.string() },
 	t.option(splitDto),
-	getGlobalBestForMapProcedure,
+	get_global_best_for_map_procedure,
 );

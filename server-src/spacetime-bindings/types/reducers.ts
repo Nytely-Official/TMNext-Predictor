@@ -6,5 +6,7 @@
 import { type Infer as __Infer } from "spacetimedb";
 
 // Import all reducer arg schemas
+import SubmitSplitReducer from "../submit_split_reducer";
 
+export type SubmitSplitParams = __Infer<typeof SubmitSplitReducer>;
 

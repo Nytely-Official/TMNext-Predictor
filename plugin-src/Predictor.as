@@ -1065,7 +1065,7 @@ namespace Predictor {
         void Render() {
             if (!isInGame || !hasStarted) return;
             
-            vec2 screenSize = vec2(Draw::GetWidth(), Draw::GetHeight());
+            vec2 screenSize = Display::GetSize();
             // Initialize overlay position and size from settings once per session (persist across restarts)
             if (!overlayInitialized) {
                 // Initialize position from normalized settings
@@ -1245,8 +1245,8 @@ namespace Predictor {
             nvg::FontFace(font);
             nvg::TextAlign(nvg::Align::Center | nvg::Align::Middle);
             
-            // Draw background (show when enabled OR when drag/resize is enabled)
-            if (showBackground || enableResizeDrag) {
+            // Draw background only when the user wants it (resize/drag uses edge highlights instead)
+            if (showBackground) {
                 nvg::FillColor(backgroundColor);
                 nvg::BeginPath();
                 nvg::RoundedRect(overlayPosition.x, overlayPosition.y, overlaySize.x, overlaySize.y, 8);

@@ -6,7 +6,7 @@
 import type { Timestamp } from 'spacetimedb';
 import { t } from 'spacetimedb/server';
 
-/** Wire / client shape for a split row returned by read procedures and `submitSplit`. */
+/** Wire / client shape for a split row returned by read procedures (and after `submit_split`). */
 export const splitDto = t.object('SplitDto', {
 	splitId: t.u64(),
 	accountId: t.string(),
