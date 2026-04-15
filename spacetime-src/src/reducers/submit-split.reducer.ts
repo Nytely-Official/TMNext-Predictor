@@ -31,14 +31,15 @@ export const submit_split = db.reducer(
 			ctx.db.trackMap.insert({ mapUid });
 		}
 
-		const when = runDate !== undefined ? runDate : ctx.timestamp;
+		const when = runDate ?? ctx.timestamp;
 
 		ctx.db.split.insert({
+			id: 0n,
 			accountId,
 			mapUid,
 			checkpointTimes,
 			totalTime,
 			runDate: when,
-		} as never);
+		});
 	},
 );
