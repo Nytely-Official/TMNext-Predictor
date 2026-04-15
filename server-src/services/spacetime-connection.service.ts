@@ -10,6 +10,8 @@ import type { ErrorContext } from '../spacetime-bindings';
 import { DbConnection } from '../spacetime-bindings';
 import type { Identity } from 'spacetimedb';
 
+import { ensureReadResponseHook } from './spacetime-read-response.service';
+
 const SPACETIME_URI = process.env.SPACETIME_URI ?? 'wss://maincloud.spacetimedb.com';
 const SPACETIME_DATABASE = process.env.SPACETIME_DATABASE ?? 'tmnext-predictor';
 const SPACETIME_TOKEN = process.env.SPACETIME_TOKEN;
@@ -30,8 +32,17 @@ export function getSpacetimeConnection(): Promise<DbConnection> {
 			.withDatabaseName(SPACETIME_DATABASE)
 			.withToken(SPACETIME_TOKEN)
 			.onConnect((conn: DbConnection, _identity: Identity, _token: string) => {
-				connection = conn;
-				resolve(conn);
+				ensureReadResponseHook(conn);
+				conn.subscriptionBuilder()
+					.onApplied(() => {
+						connection = conn;
+						resolve(conn);
+					})
+					.onError(ctx => {
+						console.error('SpacetimeDB subscription error:', ctx);
+						reject(new Error('SpacetimeDB subscription failed'));
+					})
+					.subscribe('SELECT * FROM api_read_response');
 			})
 			.onConnectError((ctx: ErrorContext, err: Error) => {
 				console.error('SpacetimeDB connect error:', err);

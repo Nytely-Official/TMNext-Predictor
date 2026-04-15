@@ -34,31 +34,45 @@ import {
 } from "spacetimedb";
 
 // Import all reducer arg schemas
+import DeleteReadResponseReducer from "./delete_read_response_reducer";
+import GetGlobalBestForMapReducer from "./get_global_best_for_map_reducer";
+import GetPersonalBestForMapReducer from "./get_personal_best_for_map_reducer";
+import ListSplitsForPlayerMapReducer from "./list_splits_for_player_map_reducer";
 import SubmitSplitReducer from "./submit_split_reducer";
 
 // Import all procedure arg schemas
-import * as GetGlobalBestForMapProcedure from "./get_global_best_for_map_procedure";
-import * as GetPersonalBestForMapProcedure from "./get_personal_best_for_map_procedure";
-import * as ListSplitsForPlayerMapProcedure from "./list_splits_for_player_map_procedure";
 
 // Import all table schema definitions
+import ApiReadResponseRow from "./api_read_response_table";
 
 /** Type-only namespace exports for generated type groups. */
 
 /** The schema information for all tables in this module. This is defined the same was as the tables would have been defined in the server. */
 const tablesSchema = __schema({
+  apiReadResponse: __table({
+    name: 'api_read_response',
+    indexes: [
+      { accessor: 'requestId', name: 'api_read_response_request_id_idx_btree', algorithm: 'btree', columns: [
+        'requestId',
+      ] },
+    ],
+    constraints: [
+      { name: 'api_read_response_request_id_key', constraint: 'unique', columns: ['requestId'] },
+    ],
+  }, ApiReadResponseRow),
 });
 
 /** The schema information for all reducers in this module. This is defined the same way as the reducers would have been defined in the server, except the body of the reducer is omitted in code generation. */
 const reducersSchema = __reducers(
+  __reducerSchema("delete_read_response", DeleteReadResponseReducer),
+  __reducerSchema("get_global_best_for_map", GetGlobalBestForMapReducer),
+  __reducerSchema("get_personal_best_for_map", GetPersonalBestForMapReducer),
+  __reducerSchema("list_splits_for_player_map", ListSplitsForPlayerMapReducer),
   __reducerSchema("submit_split", SubmitSplitReducer),
 );
 
 /** The schema information for all procedures in this module. This is defined the same way as the procedures would have been defined in the server. */
 const proceduresSchema = __procedures(
-  __procedureSchema("get_global_best_for_map", GetGlobalBestForMapProcedure.params, GetGlobalBestForMapProcedure.returnType),
-  __procedureSchema("get_personal_best_for_map", GetPersonalBestForMapProcedure.params, GetPersonalBestForMapProcedure.returnType),
-  __procedureSchema("list_splits_for_player_map", ListSplitsForPlayerMapProcedure.params, ListSplitsForPlayerMapProcedure.returnType),
 );
 
 /** The remote SpacetimeDB module schema, both runtime and type information. */

@@ -10,11 +10,7 @@ import {
   type Infer as __Infer,
 } from "spacetimedb";
 
-import {
-  SplitDto,
-} from "./types";
-
-export const params = {
+export default {
   mapUid: __t.string(),
+  requestId: __t.string(),
 };
-export const returnType = __t.option(SplitDto)

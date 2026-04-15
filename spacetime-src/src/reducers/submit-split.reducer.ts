@@ -1,5 +1,5 @@
 /**
- * Persists a finished run (mutation only). Reads stay as `db.procedure` in `../index.ts`.
+ * Persists a finished run. Reads use sibling reducers + `api_read_response` staging.
  */
 import { SenderError } from 'spacetimedb/server';
 import { t } from 'spacetimedb/server';

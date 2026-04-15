@@ -13,7 +13,8 @@
 		"dev": "bun run server-src/main.ts",
 		"start": "bun run dist/main.js",
 		"generate": "spacetime generate -y --lang typescript --out-dir server-src/spacetime-bindings --module-path spacetime-src",
-		"publish": "bun run scripts/spacetime-publish-maincloud.ts"
+		"publish": "bun run scripts/spacetime-publish-maincloud.ts",
+		"spacetime:describe": "sh -c 'spacetime describe --json -s maincloud -y \"${SPACETIME_DATABASE:-tmnext-predictor}\"'"
 	},
 	"keywords": [
 		"trackmania",

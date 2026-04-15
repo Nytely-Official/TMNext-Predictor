@@ -10,6 +10,13 @@ import {
   type Infer as __Infer,
 } from "spacetimedb";
 
+export const ApiReadResponse = __t.object("ApiReadResponse", {
+  requestId: __t.string(),
+  payloadJson: __t.string(),
+  createdAt: __t.timestamp(),
+});
+export type ApiReadResponse = __Infer<typeof ApiReadResponse>;
+
 export const Player = __t.object("Player", {
   accountId: __t.string(),
   displayName: __t.string(),
@@ -25,17 +32,6 @@ export const Split = __t.object("Split", {
   runDate: __t.timestamp(),
 });
 export type Split = __Infer<typeof Split>;
-
-export const SplitDto = __t.object("SplitDto", {
-  splitId: __t.u64(),
-  accountId: __t.string(),
-  displayName: __t.string(),
-  mapUid: __t.string(),
-  checkpointTimes: __t.array(__t.u32()),
-  totalTime: __t.u32(),
-  runDate: __t.timestamp(),
-});
-export type SplitDto = __Infer<typeof SplitDto>;
 
 export const TrackMap = __t.object("TrackMap", {
   mapUid: __t.string(),

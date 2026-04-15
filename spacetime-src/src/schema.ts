@@ -1,12 +1,12 @@
 /**
- * Root schema: `ctx.db` / `tx.db` in procedures (matches the working `spacetimedb-module-EXAMPLE` layout).
+ * Root schema: `ctx.db` in reducers (plus public `api_read_response` for read staging).
  */
 import { schema, CaseConversionPolicy } from 'spacetimedb/server';
 
-import { player, split, trackMap } from './tables';
+import { apiReadResponse, player, split, trackMap } from './tables';
 
 const db = schema(
-	{ player, trackMap, split },
+	{ apiReadResponse, player, trackMap, split },
 	{ CASE_CONVERSION_POLICY: CaseConversionPolicy.None },
 );
 

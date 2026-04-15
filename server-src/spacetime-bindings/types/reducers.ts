@@ -6,7 +6,15 @@
 import { type Infer as __Infer } from "spacetimedb";
 
 // Import all reducer arg schemas
+import DeleteReadResponseReducer from "../delete_read_response_reducer";
+import GetGlobalBestForMapReducer from "../get_global_best_for_map_reducer";
+import GetPersonalBestForMapReducer from "../get_personal_best_for_map_reducer";
+import ListSplitsForPlayerMapReducer from "../list_splits_for_player_map_reducer";
 import SubmitSplitReducer from "../submit_split_reducer";
 
+export type DeleteReadResponseParams = __Infer<typeof DeleteReadResponseReducer>;
+export type GetGlobalBestForMapParams = __Infer<typeof GetGlobalBestForMapReducer>;
+export type GetPersonalBestForMapParams = __Infer<typeof GetPersonalBestForMapReducer>;
+export type ListSplitsForPlayerMapParams = __Infer<typeof ListSplitsForPlayerMapReducer>;
 export type SubmitSplitParams = __Infer<typeof SubmitSplitReducer>;
 
